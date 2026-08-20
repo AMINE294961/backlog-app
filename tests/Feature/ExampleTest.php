@@ -1,19 +1,27 @@
 <?php
 
-namespace Tests\Feature;
+use App\Models\Project;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+uses(RefreshDatabase::class);
 
-class ExampleTest extends TestCase
-{
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
-    {
-        $response = $this->get('/');
+it('un utilisateur peut créer un projet', function () {
 
-        $response->assertStatus(200);
-    }
-}
+    $user = User::factory()->create([
+        'role' => 'developpeur',
+    ]);
+
+    $project = Project::create([
+        'name' => 'Projet Test',
+        'description' => 'Projet créé avec un test automatisé',
+        'owner_id' => $user->id,
+    ]);
+
+    expect($project)->not->toBeNull();
+
+    $this->assertDatabaseHas('projects', [
+        'name' => 'Projet Test',
+        'owner_id' => $user->id,
+    ]);
+});
