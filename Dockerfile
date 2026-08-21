@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    curl \
     && docker-php-ext-install \
     pdo_mysql \
     mbstring \
@@ -25,6 +26,12 @@ COPY . .
 RUN touch database/database.sqlite
 
 RUN composer install --no-dev --optimize-autoloader
+
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+RUN apt-get install -y nodejs
+
+RUN npm install
+RUN npm run build
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
