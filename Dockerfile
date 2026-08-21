@@ -29,6 +29,9 @@ RUN chown -R www-data:www-data /var/www/html \
 
 RUN a2enmod rewrite
 
+RUN a2dismod mpm_event || true
+RUN a2enmod mpm_prefork
+
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
 
 RUN sed -i 's|<Directory /var/www/html>|<Directory /var/www/html/public>|' /etc/apache2/apache2.conf
